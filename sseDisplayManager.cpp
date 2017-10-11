@@ -12,7 +12,6 @@
 //  12/11/2004    Initial Coding          JAH
 //=========================================================
 #include "sseDisplayManager.hpp"
-#include "SDL_opengl.h"
 #include "sseMath.hpp"
 
 //  Y
@@ -33,11 +32,7 @@ sseDisplayManager *sseDisplayManager::Instance()
 
 sseDisplayManager::sseDisplayManager()
 {
-	m_SDL_Vid_Flags=0;
-
-	m_ParentWindow=NULL;
-	m_ParentSurface=NULL;
-	m_Renderer=NULL;
+	m_log = sseLog::Instance();
 
 	//m_width=1280;
 	//m_height=1024;
@@ -56,23 +51,35 @@ sseDisplayManager::sseDisplayManager()
 
 sseDisplayManager::~sseDisplayManager()
 {
-
+	glfwTerminate();
 }
 
 void sseDisplayManager::SetCursorCenter()
 {
-	SDL_WarpMouseInWindow(m_ParentWindow, m_iCenterX, m_iCenterY);
+	//SDL_WarpMouseInWindow(m_ParentWindow, m_iCenterX, m_iCenterY);
 }
 
 void sseDisplayManager::SetCursor(int x, int y)
 {
-	SDL_WarpMouseInWindow(m_ParentWindow, x, y);
+	//SDL_WarpMouseInWindow(m_ParentWindow, x, y);
 }
 
 void sseDisplayManager::InitializeWindow()
 {
+	sseErrorHandler::_ThrowIfInitFailed(glfwInit());
 	//sseErrorHandler::_ThrowIfSDLInitFailed(SDL_Init( SDL_INIT_VIDEO ));
-	sseErrorHandler::_ThrowIfSDLInitFailed(SDL_Init(SDL_INIT_EVERYTHING));
+	//sseErrorHandler::_ThrowIfSDLInitFailed(SDL_Init(SDL_INIT_EVERYTHING));
+
+	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // We want OpenGL 3.3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);          // Really Nice Perspective Calculations
+
+	//SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
 
 	//GetVideoInfo();
 
@@ -90,63 +97,55 @@ void sseDisplayManager::InitializeWindow()
 
 void sseDisplayManager::GetVideoInfo(void)
 {
-	//m_pstVideoInfo = (SDL_RendererInfo *)SDL_GetVideoInfo();
-	//sseErrorHandler::_ThrowIfSDLQueryFailed(m_pstVideoInfo);
+	int count;
+
+	GLFWmonitor* primary = glfwGetPrimaryMonitor();
+	//GLFWvidmode* modes = glfwGetVideoModes(primary, &count);
+	const GLFWvidmode* mode = glfwGetVideoMode(primary);
+
+	int widthMM, heightMM;
+
+	//The physical size of a monitor in millimetres, or an estimation
+	//of it, can be retrieved with glfwGetMonitorPhysicalSize. This has
+	//no relation to its current resolution, i.e. the width and height
+	//of its current video mode.
+	glfwGetMonitorPhysicalSize(primary, &widthMM, &heightMM);
+
+	//calculate the DPI of a monitor.
+	const double dpi = mode->width / (widthMM / 25.4);
+
+	int xpos, ypos;
+	//Virtual position
+	glfwGetMonitorPos(primary, &xpos, &ypos);
+
+	const char* name = glfwGetMonitorName(primary);
+
+	//The gamma ramp of a monitor
+	const GLFWgammaramp* ramp = glfwGetGammaRamp(primary);
 }
 
 void sseDisplayManager::ConfigurePixelFormat(void)
 {
-
-	int m_SDL_Vid_Flags = SDL_WINDOW_OPENGL |
-					   SDL_WINDOW_RESIZABLE;
-
-			//if (fullscreen) {
-			//	m_SDL_Vid_Flags |= SDL_WINDOW_FULLSCREEN;
-			//}
-
-    //if(m_pstVideoInfo -> hw_available)
-    //    m_SDL_Vid_Flags |= SDL_HWSURFACE;
-    //else
-    //    m_SDL_Vid_Flags |= SDL_SWSURFACE;
-    
-    //if(m_pstVideoInfo -> blit_hw)
-    //    m_SDL_Vid_Flags |= SDL_HWACCEL;
-
-    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE,   m_depth);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1); 
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  2);// Antialiasing
-
-	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, m_depth/4);
-	//SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, m_depth/4);
-	//SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, m_depth/4);
-	//SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, m_depth/4);
-
-
-   // SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 0);
-    //SDL_GL_SetAttribute( SDL_GL_ACCUM_RED_SIZE, 0);
-    //SDL_GL_SetAttribute( SDL_GL_ACCUM_GREEN_SIZE, 0);
-    //SDL_GL_SetAttribute( SDL_GL_ACCUM_BLUE_SIZE, 0);
-    //SDL_GL_SetAttribute( SDL_GL_ACCUM_ALPHA_SIZE, 0);
+	glfwWindowHint(GLFW_DEPTH_BITS,32);
 }
 
 void sseDisplayManager::CreateSDLWindow(void)
 {
-	// Gone in SDL2
-    // SDL_WM_SetCaption("Scaled Simulator", "Scaled Simulator");
+	m_window = glfwCreateWindow(m_width, m_height, "Scaled Simulator", NULL, NULL);
 
-	m_ParentWindow = SDL_CreateWindow("Scaled Simulator",
-                                          SDL_WINDOWPOS_UNDEFINED,
-                                          SDL_WINDOWPOS_UNDEFINED,
-										  m_width,
-										  m_height,
-                                          SDL_WINDOW_RESIZABLE);
+	sseErrorHandler::_ThrowIfWindowFail(m_window);
 
-	m_ParentSurface = SDL_GetWindowSurface(m_ParentWindow);
+	InstallHooks(m_window);
 
-	m_Renderer = SDL_CreateRenderer(m_ParentWindow, -1, 0);
+	glfwMakeContextCurrent(m_window); // Initialize GLEW
 
-	ReSizeOpenGLWindow(m_width, m_height);
+	//glewExperimental=true; // Needed in core profile
+
+	//ReSizeOpenGLWindow(m_width, m_height);
+
+	int bpp=glfwGetWindowAttrib(m_window, GLFW_DEPTH_BITS);
+
+	m_log->Info("OpenGL bpp: %i\nOpenGL w x h: %i x %i", bpp, m_width, m_height);
 }
 
 void sseDisplayManager::Clear(void)
@@ -155,7 +154,35 @@ void sseDisplayManager::Clear(void)
 	glLoadIdentity();
 }
 
-void sseDisplayManager::ReSizeOpenGLWindow(int iwidth, int iheight)
+void sseDisplayManager::InstallHooks(GLFWwindow* window) {
+	glfwSetWindowUserPointer(window, this);
+
+	glfwSetWindowSizeCallback(window, onResizeCallback);
+	glfwSetFramebufferSizeCallback(window, onFrameBuffResizeCallback);
+	glfwSetWindowRefreshCallback(window, onRefreshCallback);
+	glfwSetWindowPosCallback(window,onMoveCallback);
+	glfwSetWindowFocusCallback(window, onFocusCallback);
+	glfwSetWindowCloseCallback(window, onCloseCallback);
+	glfwSetWindowIconifyCallback(window, onIconifyCallback);
+}
+
+void sseDisplayManager::onMove(int xPos, int yPos) {
+
+}
+
+void sseDisplayManager::onFocus(int focused) {
+    //GL_TRUE
+}
+
+void sseDisplayManager::onClose() {
+    //GL_TRUE
+}
+
+void sseDisplayManager::onIconify(int iconified) {
+    //GL_TRUE
+}
+
+void sseDisplayManager::onResize(int iwidth, int iheight)
 {
     if (iheight==0) iheight=1;
 
@@ -165,13 +192,11 @@ void sseDisplayManager::ReSizeOpenGLWindow(int iwidth, int iheight)
 	m_iCenterX = m_width  >> 1;
 	m_iCenterY = m_height >> 1;
 
-	SDL_SetWindowSize(m_ParentWindow, m_width, m_height);
-	m_ParentSurface = SDL_GetWindowSurface(m_ParentWindow);
-
-	//Gone in SDL2
-	//m_ParentSurface = SDL_SetVideoMode( m_width, m_height, m_depth, m_SDL_Vid_Flags );
+	glfwSetWindowSize(m_window, m_width, m_height);
 
 	glViewport(0,0,m_width,m_height);
+
+	sseErrorHandler::_ThrowIfOGLDisplayError();
 
 	SetProjectionMatrix(m_zDistance);
 
@@ -181,9 +206,17 @@ void sseDisplayManager::ReSizeOpenGLWindow(int iwidth, int iheight)
 	glEnable(GL_DEPTH_TEST); // Enables Depth Testing
 	glDepthFunc(GL_LEQUAL); // Type of depth test
 
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	sseErrorHandler::_ThrowIfOGLDisplayError();
 
-	sseErrorHandler::_ThrowIfSDLWindowFail(m_ParentSurface);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+}
+
+void sseDisplayManager::onFrameBufferResize(int iwidth, int iheight) {
+
+}
+
+void sseDisplayManager::onRefresh(void) {
+
 }
 
 void sseDisplayManager::SetProjectionMatrix(float zDistance)
@@ -193,31 +226,25 @@ void sseDisplayManager::SetProjectionMatrix(float zDistance)
 	glLoadIdentity();
 	gluPerspective (60.0f*m_zDistance, (float)m_width/(float)m_height, m_nearClip, m_farClip);
 	glMatrixMode (GL_MODELVIEW);
+	sseErrorHandler::_ThrowIfOGLDisplayError();
 }
 
 void sseDisplayManager::Flip(void)
 {
-	SDL_RenderPresent(m_Renderer);
-	//SDL2 removed flip
-	//sseErrorHandler::_ThrowIfSDLUpdateFail(SDL_Flip(m_ParentSurface));
+	glfwSwapBuffers(m_window);
 }
 
 void sseDisplayManager::SwitchToFullScreen(void)
 {
-	m_SDL_Vid_Flags |= SDL_WINDOW_FULLSCREEN;
+	GLFWwindow *fsDisplayHandle = glfwCreateWindow(m_width, m_height, "Scaled Simulator", true ? glfwGetPrimaryMonitor() : NULL, m_window);
 
-	sseErrorHandler::_ThrowIfSDLFullScreenSwitch(SDL_SetWindowFullscreen(m_ParentWindow, m_SDL_Vid_Flags));
+	sseErrorHandler::_ThrowIfWindowFail(fsDisplayHandle);
 
-    //sseErrorHandler::_ThrowIfSDLFullScreenSwitch(SDL_WM_ToggleFullScreen(m_ParentSurface));
-	//m_ParentSurface = SDL_SetVideoMode(m_width, m_height, m_depth, m_SDL_Vid_Flags);
-	//sseErrorHandler::_ThrowIfSDLWindowFail(m_ParentSurface);
+	InstallHooks(fsDisplayHandle);
 
-	//char gamestr [256]={0};
-	//sprintf (gamestr, "%dx%d:%d", m_width, m_height, m_depth);
-	//glutGameModeString (gamestr);
-	//if (glutGameModeGet (GLUT_GAME_MODE_POSSIBLE))
- //   {
- //     glutEnterGameMode ();
- //   }
-	//glViewport (0, 0, (GLint) m_width, (GLint) m_height);
+	glfwDestroyWindow(m_window);
+
+	m_window = fsDisplayHandle;
+
+	glfwMakeContextCurrent(m_window);
 }

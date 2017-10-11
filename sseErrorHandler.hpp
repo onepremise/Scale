@@ -22,7 +22,7 @@
 #include <map>
 
 #include "SDL.h"
-#include "SDL_ttf.h"
+//#include "SDL_ttf.h"
 
 using namespace std;
 
@@ -44,14 +44,14 @@ public:
 	{
 		ERROR_UNEXPECTED,
 		ERROR_NULLPOINTER,
-		ERROR_SDL_INIT,
-		ERROR_SDL_QUERY,
-		ERROR_SDL_WINDOW,
-		ERROR_SDL_UPDATE,
-		ERROR_SDL_FULLSCREEN,
-		ERROR_SDL_CURSOR,
-		ERROR_SDL_ENABLE_KEY_REPEAT,
-		ERROR_SDL_TEXTURE_LOAD,
+		ERROR_INIT,
+		ERROR_QUERY,
+		ERROR_WINDOW,
+		ERROR_UPDATE,
+		ERROR_FULLSCREEN,
+		ERROR_CURSOR,
+		ERROR_ENABLE_KEY_REPEAT,
+		ERROR_TEXTURE_LOAD,
 		ERROR_DISPLAY_INIT,
 		ERROR_MATRIX_SIZE,
 		ERROR_MATRIX_INVALID_SIZE,
@@ -78,14 +78,14 @@ private:
 	{
 		m_errCodes[ERROR_UNEXPECTED]="Unexpected Error!";
 		m_errCodes[ERROR_NULLPOINTER]="Null Exception!";
-		m_errCodes[ERROR_SDL_INIT]="Failed initializing SDL Video!";
-		m_errCodes[ERROR_SDL_QUERY]="SDL Cannot query your video hardware!";
-		m_errCodes[ERROR_SDL_WINDOW]="SDL failed to create window!";
-		m_errCodes[ERROR_SDL_UPDATE]="Failed to swap the buffers!";
-		m_errCodes[ERROR_SDL_FULLSCREEN]="Failed to switch to Fullscreen mode!";
-		m_errCodes[ERROR_SDL_CURSOR]="Failed to switch to Fullscreen mode!";
-		m_errCodes[ERROR_SDL_ENABLE_KEY_REPEAT]="Failed to enable key repeat!";
-		m_errCodes[ERROR_SDL_TEXTURE_LOAD]="Failed to load texture!";
+		m_errCodes[ERROR_INIT]="Failed initializing SDL Video!";
+		m_errCodes[ERROR_QUERY]="SDL Cannot query your video hardware!";
+		m_errCodes[ERROR_WINDOW]="SDL failed to create window!";
+		m_errCodes[ERROR_UPDATE]="Failed to swap the buffers!";
+		m_errCodes[ERROR_FULLSCREEN]="Failed to switch to Fullscreen mode!";
+		m_errCodes[ERROR_CURSOR]="Failed to switch to Fullscreen mode!";
+		m_errCodes[ERROR_ENABLE_KEY_REPEAT]="Failed to enable key repeat!";
+		m_errCodes[ERROR_TEXTURE_LOAD]="Failed to load texture!";
 		m_errCodes[ERROR_DISPLAY_INIT]="Display Initialization Error!";
 		m_errCodes[ERROR_MATRIX_SIZE]="Matrix Algebra Error!";
 		m_errCodes[ERROR_MATRIX_INVALID_SIZE]="Matrix Algebra Error, invalid size!";
@@ -117,9 +117,9 @@ public:
 	}
 
 	static void _ThrowIfNull(void *ptr);
-	static void _ThrowIfSDLInitFailed(int iError);
+	static void _ThrowIfInitFailed(int iError);
 	static void _ThrowIfSDLQueryFailed(SDL_RendererInfo *pVidInfo);
-	static void _ThrowIfSDLWindowFail(SDL_Surface *pWindow);
+	static void _ThrowIfWindowFail(void *ptr);
 	static void _ThrowIfSDLUpdateFail(int iError);
 	static void _ThrowIfSDLFullScreenSwitch(int iError);
 	static void _LogIfSDLCursorFail(int iSDLCALL);
@@ -131,10 +131,12 @@ public:
 	static void _ThrowIfVectorError(bool bTest);
 	static void _ThrowIfUnitVectorError(bool bTest);
 	static void _ThrowIfFontError(int iError);
-	static void _ThrowIfFontLoadError(TTF_Font *font);
+	//static void _ThrowIfFontLoadError(TTF_Font *font);
 	static void _ThrowIfFontRenderError(SDL_Surface *text);
 	static void _ThrowIfAC3DInitError(void *ptr, char *szFile);
 	static void _ThrowIfAC3DDispError(int ac3dReturn, char *szFile);
+	static void _ThrowIfOGLError(sseErrorCodes::errIdentifier e, const char *szArea);
+	static void _ThrowIfOGLDisplayError();
 	static void _ThrowIfOGLRendererError();
 	static void _ThrowIfUnitTestFail(bool bTest, char *szTestName);
 

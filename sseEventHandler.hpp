@@ -35,18 +35,19 @@ public:
 	static sseEventMappings *GetEventMappings() { return &m_EventMappings; } 
 
 public:
+	void Initialize();
 	void HandleEvents();
 
 protected:
 	void printHelp();
 
-	virtual void HandleKeyPressEvents(SDL_Scancode *pKeyEvent);
-	virtual void HandleKeyReleaseEvents(SDL_Scancode *pKeyEvent);
+	virtual void HandleKeyPressEvents(int key);
+	virtual void HandleKeyReleaseEvents(int key);
 	virtual void HandleMouseMotionEvents(SDL_MouseMotionEvent *pMotion);
 	virtual void HandleMouseButtonEvents(SDL_MouseButtonEvent *pButton);
 
-	void objHandleKeyPressEvents(SDL_Scancode *pKeyEvent);
-	void objHandleKeyReleaseEvents(SDL_Scancode *pKeyEvent);
+	void objHandleKeyPressEvents(int key);
+	void objHandleKeyReleaseEvents(int key);
 	void objHandleMouseMotionEvents(SDL_MouseMotionEvent *pMotion);
 	void objHandleMouseButtonEvents(SDL_MouseButtonEvent *pButton);
 
@@ -56,7 +57,7 @@ private:
 	void AssignCurMouseCoordinates(SDL_MouseMotionEvent *pMotion);
 	void AssignLastMouseCoordinates(SDL_MouseMotionEvent *pMotion);
 
-	void ProcessEvents(SDL_Event &sdlEvent);
+	void ProcessEvents();
 
 	void cycleHandling();
 

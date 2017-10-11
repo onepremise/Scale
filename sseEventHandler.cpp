@@ -38,53 +38,48 @@ sseEventHandler::sseEventHandler(sseEngine *pEngine)
 	m_bHasFocus=true;
 }
 
+void sseEventHandler::Initialize() {
+
+}
+
 void sseEventHandler::HandleEvents()
 {
-	SDL_Event sdlEvent;
+	GLFWwindow* window=m_pDisplay->GetWindow();
 
-	while( SDL_PollEvent(&sdlEvent))
-	{
-		if (sdlEvent.type == SDL_WINDOWEVENT)
-		{
-			switch (sdlEvent.window.event) {
-	        case SDL_WINDOWEVENT_SHOWN:
-	        	m_bHasFocus=true;
-	        	m_pDisplay->SetCursorCenter();
-	            break;
-	        case SDL_WINDOWEVENT_HIDDEN:
-	        	m_bHasFocus=false;
-	        	break;
-	        case SDL_WINDOWEVENT_FOCUS_GAINED:
-	        	m_bHasFocus=true;
-	        	m_pDisplay->SetCursorCenter();
-	            break;
-	        case SDL_WINDOWEVENT_FOCUS_LOST:
-	        	m_bHasFocus=false;
-	        	break;
-	        case SDL_WINDOWEVENT_ENTER:
-	        	m_bHasFocus=true;
-	        	m_pDisplay->SetCursorCenter();
-	            break;
-	        case SDL_WINDOWEVENT_LEAVE:
-	        	m_bHasFocus=false;
-	        	break;
-			}
-		}
-		else if( sdlEvent.type == SDL_WINDOWEVENT_RESIZED )
-        {	
-			m_pDisplay->ReSizeOpenGLWindow(sdlEvent.window.data1, sdlEvent.window.data2);
-		}
-		else if( sdlEvent.type == SDL_WINDOWEVENT_EXPOSED )
-        {	
-			m_pDisplay->Flip();
-		}
-		else if (m_bHasFocus)
-			ProcessEvents(sdlEvent);
+	glfwPollEvents();
+
+	if (glfwWindowShouldClose(window)) {
+		m_pEngine->ShutdownSimulator();
+	} else if (glfwGetWindowAttrib(window, GLFW_FOCUSED) && !m_bHasFocus) {
+    	m_bHasFocus=true;
+    	m_pDisplay->SetCursorCenter();
+    	m_pDisplay->Flip();
+    } else {
+    	m_bHasFocus=false;
+    }
+
+	if (m_bHasFocus)
+			ProcessEvents();
 	}
 }
 
-void sseEventHandler::ProcessEvents(SDL_Event &sdlEvent) 
+void sseEventHandler::ProcessEvents()
 {
+	GLFWwindow* window=m_pDisplay->GetWindow();
+
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+    	xspeed-=.04f;
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) yspeed+=.04f;
+    if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) yspeed-=.04f;
+    if(glfwGetKey(window, '0') == GLFW_PRESS) z+=.04f;
+    if(glfwGetKey(window, '1') == GLFW_PRESS) z-=.04f;
+
 	switch ( sdlEvent.type )
 	{
 	case SDL_KEYDOWN:
@@ -140,9 +135,9 @@ void sseEventHandler::RemoveObjectFromQueue(sseEventObjectHandler *pOEH)
 
 void sseEventHandler::HandleKeyPressEvents(SDL_Scancode *pKeyCode)
 {
-	//const Uint8 *keys = SDL_GetKeyboardState(NULL);
+	SDL_Scancode code = *pKeyCode;
 
-    switch((int)pKeyCode)
+    switch(code)
     {
         case SDL_SCANCODE_F1:
             printHelp();
@@ -243,7 +238,7 @@ void sseEventHandler::cycleHandling()
 	fprintf(stdout, strName.c_str());
 }
 
-void sseEventHandler::HandleKeyReleaseEvents(SDL_Scancode *pKeyCode)
+void sseEventHandler::HandleKeyReleaseEvents(int key)
 {
 	switch((int)pKeyCode)
     {
@@ -276,16 +271,16 @@ void sseEventHandler::HandleKeyReleaseEvents(SDL_Scancode *pKeyCode)
 	objHandleKeyReleaseEvents(pKeyCode);
 }
 
-void sseEventHandler::objHandleKeyPressEvents(SDL_Scancode *pKeyCode)
+void sseEventHandler::objHandleKeyPressEvents(int key)
 {
 	for (objEHQIter it = m_objEHQueue.begin(); it != m_objEHQueue.end(); it++)
-		(*it)->HandleKeyPressEvents(pKeyCode);
+		(*it)->HandleKeyPressEvents(key);
 }
 
-void sseEventHandler::objHandleKeyReleaseEvents(SDL_Scancode *pKeyCode)
+void sseEventHandler::objHandleKeyReleaseEvents(int key)
 {
 	for (objEHQIter it = m_objEHQueue.begin(); it != m_objEHQueue.end(); it++)
-		(*it)->HandleKeyReleaseEvents(pKeyCode);
+		(*it)->HandleKeyReleaseEvents(key);
 }
 
 void sseEventHandler::AssignCurMouseCoordinates(SDL_MouseMotionEvent *pMotion)

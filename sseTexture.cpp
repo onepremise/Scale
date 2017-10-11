@@ -3,6 +3,16 @@
 
 int sseTexture::idCounter=0;
 
+void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message){
+    printf("\n*** ");
+    if(fif != FIF_UNKNOWN) {
+        if (FreeImage_GetFormatFromFIF(fif))
+            printf("%s Format\n", FreeImage_GetFormatFromFIF(fif));
+    }
+    printf(message);
+    printf(" ***\n");
+}
+
 sseTexture::sseTexture(void)
 {
 	#ifdef FREEIMAGE_LIB
@@ -115,15 +125,35 @@ int sseTexture::LoadWrap(String filename, int textureID, GLenum image_format, in
 	unsigned int width(0), height(0);
 	GLuint glTexurePtr=0;
 
+	//SDL_CreateRGBSurface
+
 	if (textureID<0)
 		textureID=idCounter++;
 
+	return textureID;
+
 	sseErrorHandler::_ThrowIfSDLTextureLoadError();
+
+	FreeImage_SetOutputMessage(FreeImageErrorHandler);
 
 	FIBITMAP *dib=OpenImage(filename.c_str());
 
 	if(!dib)
 		sseErrorHandler::_ThrowIfSDLTextureLoadError();
+
+	int bitsPerPixel =  FreeImage_GetBPP(dib);
+
+	FIBITMAP* bitmap32;
+	if (bitsPerPixel == 32)
+	{
+	    cout << "Source image has " << bitsPerPixel << " bits per pixel. Skipping conversion." << endl;
+	    bitmap32 = dib;
+	}
+	else
+	{
+	    cout << "Source image has " << bitsPerPixel << " bits per pixel. Converting to 32-bit colour." << endl;
+	    bitmap32 = FreeImage_ConvertTo32Bits(dib);
+	}
 
 	if(image_format==GL_RGB)
 		components = 3;
@@ -133,20 +163,22 @@ int sseTexture::LoadWrap(String filename, int textureID, GLenum image_format, in
 		sseErrorHandler::_ThrowIfSDLTextureLoadError();
 	}
 
-	depth = FreeImage_GetBPP(dib);
-	bgrBits = FreeImage_GetBits(dib);
-	width  = FreeImage_GetWidth(dib);
-	height = FreeImage_GetHeight(dib);
+	depth = FreeImage_GetBPP(bitmap32);
+	bgrBits = FreeImage_GetBits(bitmap32);
+	width  = FreeImage_GetWidth(bitmap32);
+	height = FreeImage_GetHeight(bitmap32);
 
 	if((bgrBits == 0) || (width == 0) || (height == 0))
 	{
 		CloseImage(dib);
+		CloseImage(bitmap32);
 		sseErrorHandler::_ThrowIfSDLTextureLoadError();
 	}
 
 	rgbBits = convertToRGBA(bgrBits, components, width, height);
 
 	CloseImage(dib);
+	CloseImage(bitmap32);
 
 	map<int, GLuint>::iterator it = m_IDs.find(textureID);
 

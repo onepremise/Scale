@@ -39,6 +39,8 @@
 
 using namespace std;
 
+#include <GLFW/glfw3.h>
+
 #include "SDL.h"                                           // The SDL Header File
 #include "sseErrorHandler.hpp"
 #include "sseLog.h"

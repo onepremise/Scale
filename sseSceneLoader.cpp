@@ -63,7 +63,7 @@ void sseSceneLoader::Build()
 	m_pGraph->setCamera(&m_camera);
 
 	const double SCALE=.01;
-
+/*
 	sseSpace *space=new sseSpace();
 	space->SetSize(59135200*SCALE);
 	space->setPosition(0.0,0.0,0.0);
@@ -87,9 +87,11 @@ void sseSceneLoader::Build()
 	moon->setPosition(38400*SCALE,0.0,0.0f);
 	moon->SetRotationalVel(0,1023*SCALE/1200,0);
 	earth->AddNode(moon, false, true);
+*/
+	obj3DGrid *grid=new obj3DGrid();
 
 	m_camera.SetView(0, 0.5, 0,  0, 0, 0.5,  0, 0.5, 0 );
-	m_camera.SetPosition(moon->getWorldPosition());
+	m_camera.SetPosition(grid->getWorldPosition());
 }
 
 void sseSceneLoader::Load()
@@ -118,7 +120,6 @@ void sseSceneLoader::Render()
 {
 	ClearDisplay();
 	m_pGraph->renderScene();
-	SDL_GL_SwapWindow(m_pDisplay->GetWindow());
 }
 
 

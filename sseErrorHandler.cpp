@@ -33,14 +33,14 @@ void sseErrorHandler::_ThrowIfNull(void *ptr)
 	}
 }
 
-void sseErrorHandler::_ThrowIfSDLInitFailed(int iError)
+void sseErrorHandler::_ThrowIfInitFailed(int iError)
 {
 	if( iError < 0 )
 	{
 		sseLog *log=sseLog::Instance();
 		log->Error("Failed initializing SDL Video: %s", SDL_GetError());
 		cerr << "Failed initializing SDL Video : " << SDL_GetError() << endl;
-		throw sseErrorHandler (sseErrorCodes::ERROR_NULLPOINTER);
+		throw sseErrorHandler (sseErrorCodes::ERROR_INIT);
 	}
 }
 
@@ -51,18 +51,18 @@ void sseErrorHandler::_ThrowIfSDLQueryFailed(SDL_RendererInfo *pVidInfo)
 		sseLog *log=sseLog::Instance();
 		log->Error("Failed quering SDL Video hardware: %s", SDL_GetError());
 		cerr << "Failed quering SDL Video hardware: " << SDL_GetError() << endl;
-		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_QUERY);
+		throw sseErrorHandler (sseErrorCodes::ERROR_QUERY);
 	}
 }
 
-void sseErrorHandler::_ThrowIfSDLWindowFail(SDL_Surface *pWindow)
+void sseErrorHandler::_ThrowIfWindowFail(void *pWindow)
 {
 	if (pWindow == NULL || pWindow == (void *)DEBUG_NULL)
 	{
 		sseLog *log=sseLog::Instance();
 		log->Error("Failed to create window: %s", SDL_GetError());
 		cerr << "Failed to create window: " << SDL_GetError() << endl;
-		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_WINDOW);
+		throw sseErrorHandler (sseErrorCodes::ERROR_WINDOW);
 	}
 }
 
@@ -73,7 +73,7 @@ void sseErrorHandler::_ThrowIfSDLFullScreenSwitch(int iError)
 		sseLog *log=sseLog::Instance();
 		log->Error("Failed to Toggle Fullscreen mode: %s", SDL_GetError());
 		cerr << "Failed to Toggle Fullscreen mode: " << SDL_GetError() << endl;
-		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_FULLSCREEN);
+		throw sseErrorHandler (sseErrorCodes::ERROR_FULLSCREEN);
 	}
 }
 
@@ -84,7 +84,7 @@ void sseErrorHandler::_ThrowIfSDLUpdateFail(int iError)
 		sseLog *log=sseLog::Instance();
 		log->Error("Failed to swap the buffers: %s", SDL_GetError());
 		cerr << "Failed to swap the buffers: " << SDL_GetError() << endl;
-		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_FULLSCREEN);
+		throw sseErrorHandler (sseErrorCodes::ERROR_FULLSCREEN);
 	}
 }
 
@@ -99,23 +99,13 @@ void sseErrorHandler::_LogIfSDLCursorFail(int iSDLCALL)
 
 void sseErrorHandler::_ThrowIfSDLTextureLoadError()
 {
-	GLenum gl_error=glGetError();
-	if ( gl_error != GL_NO_ERROR ) {
-		/* If this failed, the text may exceed texture size limits */
-		cout << gluErrorString(gl_error) << endl;
-		printf("Warning: Couldn't create texture: 0x%x\n", gl_error);
-
-		sseLog *log=sseLog::Instance();
-		log->Error("Warning: Couldn't create texture: 0x%x\n", gl_error);
-
-		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_TEXTURE_LOAD);
-	}
+	_ThrowIfOGLError(sseErrorCodes::ERROR_TEXTURE_LOAD, "Create texture");
 }
 
 void sseErrorHandler::_ThrowIfEnableKeyRepFail(int iCall)
 {
 	if (iCall)
-		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_ENABLE_KEY_REPEAT);
+		throw sseErrorHandler (sseErrorCodes::ERROR_ENABLE_KEY_REPEAT);
 }
 
 void sseErrorHandler::_ThrowIfDisplayFail(sseDisplayManager *pCDisp)
@@ -167,11 +157,11 @@ void sseErrorHandler::_ThrowIfFontError(int iError)
 		throw sseErrorHandler (sseErrorCodes::ERROR_FONT_INIT);
 }
 
-void sseErrorHandler::_ThrowIfFontLoadError(TTF_Font *font)
+/*void sseErrorHandler::_ThrowIfFontLoadError(TTF_Font *font)
 {
 	if (font == NULL)
 		throw sseErrorHandler (sseErrorCodes::ERROR_FONT_LOAD);
-}
+}*/
 
 void sseErrorHandler::_ThrowIfFontRenderError(SDL_Surface *text)
 {
@@ -203,41 +193,32 @@ void sseErrorHandler::_ThrowIfAC3DDispError(int ac3dReturn, char *szFile)
 	}
 }
 
-void sseErrorHandler::_ThrowIfOGLRendererError()
+void sseErrorHandler::_ThrowIfOGLError(sseErrorCodes::errIdentifier e, const char *szArea)
 {
 	GLenum gl_error=glGetError();
 	if ( gl_error != GL_NO_ERROR ) {
 		/* If this failed, the text may exceed texture size limits */
 		cout << gluErrorString(gl_error) << endl;
-		printf("Error: sseGrafxRenderer failed: 0x%x\n", gl_error);
+		printf("Error: %s failed: 0x%x\n", szArea, gl_error);
 
 		sseLog *log=sseLog::Instance();
-		log->Error("Error: sseGrafxRenderer failed: 0x%x\n", gl_error);
+		log->Error("Error: %s failed: 0x%x\n", szArea, gl_error);
 
 		throw sseErrorHandler (sseErrorCodes::ERROR_OGL_RENDERER_FAILED);
 	}
 }
 
+void sseErrorHandler::_ThrowIfOGLRendererError()
+{
+	_ThrowIfOGLError(sseErrorCodes::ERROR_OGL_RENDERER_FAILED, "sseGrafxRenderer");
+}
+
+void sseErrorHandler::_ThrowIfOGLDisplayError()
+{
+	_ThrowIfOGLError(sseErrorCodes::ERROR_DISPLAY_INIT, "sseDisplayManager");
+}
+
 void sseErrorHandler::_ThrowIfUnitTestFail(bool bTest, char *szTestName)
 {
-	if (bTest) {
-		cerr << "Failed to Run Unit Test: " << szTestName << "!" << endl;
-
-		sseLog *log=sseLog::Instance();
-		log->Error("Failed to Run Unit Test: %s!", szTestName);
-
-		throw sseErrorHandler (sseErrorCodes::ERROR_UNIT_TEST_FAILED);
-	}
-
-	GLenum gl_error=glGetError();
-	if ( gl_error != GL_NO_ERROR ) {
-		/* If this failed, the text may exceed texture size limits */
-		cout << gluErrorString(gl_error) << endl;
-		printf("Error: OGL Unit Test Failed: 0x%x\n", gl_error);
-
-		sseLog *log=sseLog::Instance();
-		log->Error("Error: OGL Unit Test Failed: 0x%x\n", gl_error);
-
-		throw sseErrorHandler (sseErrorCodes::ERROR_OGL_RENDERER_FAILED);
-	}
+	_ThrowIfOGLError(sseErrorCodes::ERROR_UNIT_TEST_FAILED, "OGL Unit Test");
 }
