@@ -34,8 +34,38 @@ sseEventHandler::sseEventHandler(sseEngine *pEngine)
 	m_fCurrentY=m_pDisplay->GetCenterY();
 	m_fLastX=m_pDisplay->GetCenterX();
 	m_fLastY=m_pDisplay->GetCenterY();
+    
+//    glfwSetCursorPosCallback(m_pDisplay->GetWindow(), cursor_position_callback);
+//    glfwSetCursorEnterCallback(m_pDisplay->GetWindow(), cursor_enter_callback);
 
 	m_bHasFocus=true;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    
+//    if (key == GLFW_KEY_E && action == GLFW_PRESS)
+//        activate_airship();
+}
+
+//static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+//{
+//}
+//
+//void cursor_enter_callback(GLFWwindow* window, int entered)
+//{
+//    if (entered)
+//    {
+//        // The cursor entered the content area of the window
+//    }
+//    else
+//    {
+//        // The cursor left the content area of the window
+//    }
+//}
+
+void sseEventHandler::GetCursorPos(double & xpos, double & ypos) {
+    glfwGetCursorPos(m_pDisplay->GetWindow(), &xpos, &ypos);
 }
 
 void sseEventHandler::Initialize() {
@@ -58,8 +88,8 @@ void sseEventHandler::HandleEvents()
     	m_bHasFocus=false;
     }
 
-	if (m_bHasFocus)
-			ProcessEvents();
+    if (m_bHasFocus) {
+        ProcessEvents();
 	}
 }
 
@@ -68,7 +98,7 @@ void sseEventHandler::ProcessEvents()
 	GLFWwindow* window=m_pDisplay->GetWindow();
 
     if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-    	xspeed-=.04f;
+    	//xspeed-=.04f;
     }
 
     if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {

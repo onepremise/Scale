@@ -37,6 +37,7 @@ public:
 public:
 	void Initialize();
 	void HandleEvents();
+    void GetCursorPos(double & xpos, double & ypos);
 
 protected:
 	void printHelp();
@@ -62,6 +63,7 @@ private:
 	void cycleHandling();
 
 private:
+    static int eventTable[GLFW_KEY_LAST] = {0};
 	static objEventHandlerQueue m_objEHQueue;
 	static objEventHandlerQueue m_objInactiveEHQueue;
 

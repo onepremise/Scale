@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\sseMaterial.h"
+#include "../sseMaterial.h"
 
 enum CullingMode {
         CULL_FRONT = 0,

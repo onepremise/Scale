@@ -2,7 +2,6 @@
 #define __sseDisplayManager__
 
 #include "sseInclude.hpp"
-#include "sseLog.h"
 
 enum FONTI18NMODE {
 	RENDER_LATIN1,
@@ -25,7 +24,7 @@ protected:
 public:
 	void InitializeWindow();
 	void ConfigurePixelFormat(void);
-	void CreateSDLWindow(void);
+	void CreateWindow(void);
 	void Clear(void);
 	void onMove(int xPos, int yPos);
 	void onFocus(int focusted);
@@ -37,6 +36,7 @@ public:
 	void Flip(void);
 	void SwitchToFullScreen(void);
 	void GetVideoInfo(void);
+    //sseDisplayWindow *GetWindow() {return m_ParentWindow;}
 	GLFWwindow *GetWindow() {return m_window;}
 	int  GetWidth(void) {return m_width;}
 	int  GetHeight(void) {return m_height;}

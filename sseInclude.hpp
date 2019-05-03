@@ -33,15 +33,22 @@
 #include <string>
 #include <iterator>
 #include <iomanip>
+
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
 #include <GL/gl.h>  // Header File For The OpenGL32 Library
 #include <GL/glu.h> // Header File For The GLu32 Library
 #include <GL/glut.h>
+#endif
 
 using namespace std;
 
 #include <GLFW/glfw3.h>
 
-#include "SDL.h"                                           // The SDL Header File
+//#include "SDL.h"                                           // The SDL Header File
 #include "sseErrorHandler.hpp"
 #include "sseLog.h"
 

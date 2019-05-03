@@ -3,7 +3,7 @@
 #define __sseTexture__
 
 #include "sseInclude.hpp"
-#include "GRFX\sseGrafxInterface.hpp"
+#include "GRFX/sseGrafxInterface.hpp"
 #include "FreeImage.h"
 
 class sseTexture

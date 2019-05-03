@@ -13,6 +13,8 @@
 //=========================================================
 #include "sseDisplayManager.hpp"
 #include "sseMath.hpp"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 //  Y
 //  |
@@ -66,9 +68,24 @@ void sseDisplayManager::SetCursor(int x, int y)
 
 void sseDisplayManager::InitializeWindow()
 {
+    int monitorCount;
+    
 	sseErrorHandler::_ThrowIfInitFailed(glfwInit());
-	//sseErrorHandler::_ThrowIfSDLInitFailed(SDL_Init( SDL_INIT_VIDEO ));
-	//sseErrorHandler::_ThrowIfSDLInitFailed(SDL_Init(SDL_INIT_EVERYTHING));
+    
+    GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+    
+    GLFWmonitor* largestMonitor = monitors[0];
+    
+    const GLFWvidmode* largestVidmode = glfwGetVideoMode(largestMonitor);
+    
+    for (int i = 1; i < monitorCount; i += 1) {
+        const GLFWvidmode* vidmode = glfwGetVideoMode(monitors[i]);
+        
+        if (vidmode->width * vidmode->height > largestVidmode->width * largestVidmode->height) {
+            largestVidmode = vidmode;
+            largestMonitor = monitors[i];
+        }
+    }
 
 	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // We want OpenGL 3.3
@@ -84,8 +101,11 @@ void sseDisplayManager::InitializeWindow()
 	//GetVideoInfo();
 
 	ConfigurePixelFormat();
+    
+    m_width=largestVidmode->width;
+    m_height=largestVidmode->height;
 
-	CreateSDLWindow();
+	CreateWindow();
 
     //sseErrorHandler::_LogIfSDLCursorFail(SDL_ShowCursor(SDL_DISABLE));
 
@@ -129,7 +149,7 @@ void sseDisplayManager::ConfigurePixelFormat(void)
 	glfwWindowHint(GLFW_DEPTH_BITS,32);
 }
 
-void sseDisplayManager::CreateSDLWindow(void)
+void sseDisplayManager::CreateWindow(void)
 {
 	m_window = glfwCreateWindow(m_width, m_height, "Scaled Simulator", NULL, NULL);
 
@@ -195,8 +215,8 @@ void sseDisplayManager::onResize(int iwidth, int iheight)
 	glfwSetWindowSize(m_window, m_width, m_height);
 
 	glViewport(0,0,m_width,m_height);
-
 	sseErrorHandler::_ThrowIfOGLDisplayError();
+	glViewport(0,0,m_width,m_height);
 
 	SetProjectionMatrix(m_zDistance);
 
@@ -205,10 +225,9 @@ void sseDisplayManager::onResize(int iwidth, int iheight)
 	glShadeModel(GL_SMOOTH); // Enable Smooth Shading
 	glEnable(GL_DEPTH_TEST); // Enables Depth Testing
 	glDepthFunc(GL_LEQUAL); // Type of depth test
-
 	sseErrorHandler::_ThrowIfOGLDisplayError();
 
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
 }
 
 void sseDisplayManager::onFrameBufferResize(int iwidth, int iheight) {
@@ -216,26 +235,26 @@ void sseDisplayManager::onFrameBufferResize(int iwidth, int iheight) {
 }
 
 void sseDisplayManager::onRefresh(void) {
-
+	//sseErrorHandler::_ThrowIfSDLWindowFail(m_ParentSurface);
 }
 
 void sseDisplayManager::SetProjectionMatrix(float zDistance)
 {
 	m_zDistance=zDistance;
 	glMatrixMode(GL_PROJECTION); 
-	glLoadIdentity();
-	gluPerspective (60.0f*m_zDistance, (float)m_width/(float)m_height, m_nearClip, m_farClip);
 	glMatrixMode (GL_MODELVIEW);
 	sseErrorHandler::_ThrowIfOGLDisplayError();
+	gluPerspective (60.0f*m_zDistance, (float)m_width/(float)m_height, m_nearClip, m_farClip);
+	glMatrixMode (GL_MODELVIEW);
 }
 
-void sseDisplayManager::Flip(void)
-{
+void sseDisplayManager::Flip(void) {
 	glfwSwapBuffers(m_window);
+	//SDL2 removed flip
+	//sseErrorHandler::_ThrowIfSDLUpdateFail(SDL_Flip(m_ParentSurface));
 }
 
-void sseDisplayManager::SwitchToFullScreen(void)
-{
+void sseDisplayManager::SwitchToFullScreen(void) {
 	GLFWwindow *fsDisplayHandle = glfwCreateWindow(m_width, m_height, "Scaled Simulator", true ? glfwGetPrimaryMonitor() : NULL, m_window);
 
 	sseErrorHandler::_ThrowIfWindowFail(fsDisplayHandle);
@@ -247,4 +266,6 @@ void sseDisplayManager::SwitchToFullScreen(void)
 	m_window = fsDisplayHandle;
 
 	glfwMakeContextCurrent(m_window);
+ //   }
+	//glViewport (0, 0, (GLint) m_width, (GLint) m_height);
 }

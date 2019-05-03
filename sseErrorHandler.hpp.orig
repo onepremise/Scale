@@ -21,7 +21,11 @@
 #include <list>
 #include <map>
 
+<<<<<<< Updated upstream
+#include "SDL.h"
+=======
 //#include "SDL.h"
+>>>>>>> Stashed changes
 //#include "SDL_ttf.h"
 
 using namespace std;
@@ -117,8 +121,12 @@ public:
 	}
 
 	static void _ThrowIfNull(void *ptr);
+<<<<<<< Updated upstream
 	static void _ThrowIfInitFailed(int iError);
-	//static void _ThrowIfSDLQueryFailed(SDL_RendererInfo *pVidInfo);
+=======
+	//static void _ThrowIfSDLInitFailed(int iError);
+>>>>>>> Stashed changes
+	static void _ThrowIfSDLQueryFailed(SDL_RendererInfo *pVidInfo);
 	static void _ThrowIfWindowFail(void *ptr);
 	static void _ThrowIfSDLUpdateFail(int iError);
 	static void _ThrowIfSDLFullScreenSwitch(int iError);
@@ -132,7 +140,7 @@ public:
 	static void _ThrowIfUnitVectorError(bool bTest);
 	static void _ThrowIfFontError(int iError);
 	//static void _ThrowIfFontLoadError(TTF_Font *font);
-	//static void _ThrowIfFontRenderError(SDL_Surface *text);
+	static void _ThrowIfFontRenderError(SDL_Surface *text);
 	static void _ThrowIfAC3DInitError(void *ptr, char *szFile);
 	static void _ThrowIfAC3DDispError(int ac3dReturn, char *szFile);
 	static void _ThrowIfOGLError(sseErrorCodes::errIdentifier e, const char *szArea);
