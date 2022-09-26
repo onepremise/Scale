@@ -8,15 +8,15 @@ objAirplane::objAirplane()
 void objAirplane::DrawObject(sseGrafxInterface *pRenderer, sseTexture *pTextureLoader)
 {
     static float airplane[9][3] = {
-        { 0.0,  0.5, -4.5},
-        { 3.0,  0.5, -4.5},
-        { 3.0,  0.5, -3.5},
-        { 0.0,  0.5,  0.5},
-        { 0.0,  0.5,  3.25},
-        { 0.0, -0.5,  5.5},
-        {-3.0,  0.5, -3.5},
-        {-3.0,  0.5, -4.5},
-        { 0.0, -0.5, -4.5}
+        { 0.0f,  0.5f, -4.5f},
+        { 3.0f,  0.5f, -4.5f},
+        { 3.0f,  0.5f, -3.5f},
+        { 0.0f,  0.5f,  0.5f},
+        { 0.0f,  0.5f,  3.25f},
+        { 0.0f, -0.5f,  5.5f},
+        {-3.0f,  0.5f, -3.5f},
+        {-3.0f,  0.5f, -4.5f},
+        { 0.0f, -0.5f, -4.5f}
     };
 
     glColor3f(1.00, 0.19, 0.69); /* violet: r=1, g=.19, b=.69 */
@@ -117,8 +117,8 @@ objIcosahedron::objIcosahedron()
 
 void objIcosahedron::DrawObject(sseGrafxInterface *pRenderer, sseTexture *pTextureLoader)
 {
-	int X=.525731112119133606;
-	int Z=.850650808352039932;
+	float X=.525731112119133606;
+	float Z=.850650808352039932;
 
 	static GLfloat vdata[12][3] = {
 		{-X, 0.0, Z}, {X, 0.0, Z}, {-X, 0.0, -Z}, {X, 0.0, -Z},    

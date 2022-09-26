@@ -13,7 +13,7 @@
 //=========================================================
 #include "sseEngine.hpp"
 #include "sseUnitTests.hpp"
-#include "GRFX\OpenGL\sseOpenGLRenderer.hpp"
+#include "GRFX/OpenGL/sseOpenGLRenderer.hpp"
 
 sseEngine *sseEngine::_instance=0;
 
@@ -155,7 +155,7 @@ void sseEngine::GetFrameRate()
 		char strTemp[25]={0};
         m_lastCompleteFrame = m_pSystemClock->GetCurrentTime();
 
-		sprintf_s(strTemp,"%s %d","Frames Per Second: ", (int)m_fFramesPerSecond);
+		sprintf(strTemp,"%s %d","Frames Per Second: ", (int)m_fFramesPerSecond);
 
 		//SDL_SetWindowTitle(strTemp);
 

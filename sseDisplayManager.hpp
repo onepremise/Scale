@@ -28,6 +28,7 @@ public:
 	void Clear(void);
 	void ReSizeOpenGLWindow(int width, int height);
 	void Flip(void);
+	void UpdateRenderer(void);
 	void SwitchToFullScreen(void);
 	void GetVideoInfo(void);
 	SDL_Window *GetWindow() {return m_ParentWindow;}
@@ -47,7 +48,9 @@ private:
 	int m_SDL_Vid_Flags;
 
 	// SDL window
+	int m_numDisplays;
 	SDL_Window* m_ParentWindow;
+	SDL_GLContext m_Context;
 	SDL_Surface   *m_ParentSurface;
 	SDL_Renderer *m_Renderer;
 	//SDL_RendererInfo *m_pstVideoInfo;

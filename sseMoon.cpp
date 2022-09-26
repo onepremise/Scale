@@ -12,7 +12,7 @@ sseMoon::~sseMoon(void)
 
 }
 
-char *sseMoon::GetTexturePath()
+const char *sseMoon::GetTexturePath()
 {
-	return "Data\\entities\\img\\moon.jpg";
+	return "Data/entities/img/moon.jpg";
 }

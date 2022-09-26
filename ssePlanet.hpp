@@ -17,7 +17,7 @@ public:
 	virtual void DrawObject(sseGrafxInterface *pRenderer, sseTexture *pTextureLoader);
 	virtual void PostProcess(sseGrafxInterface *pRenderer, sseTexture *pTextureLoader);
 
-	virtual char *GetTexturePath()=0;
+	virtual const char *GetTexturePath()=0;
 
 protected:
 	double m_radius;

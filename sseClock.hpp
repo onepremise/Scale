@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GRFX\sseGrafxInterface.hpp"
+#include "GRFX/sseGrafxInterface.hpp"
 
 class sseClock
 {

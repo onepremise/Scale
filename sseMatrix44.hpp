@@ -29,7 +29,7 @@ public:
 	{
 		sseErrorHandler::_ThrowIfMatrixError(!sseMatrix<T>::is3DMatrix());
 		if (this != &m) 
-			Copy(m);
+			this->Copy(m);
 
 		return (*this);
 	}

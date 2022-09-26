@@ -11,7 +11,7 @@ sseEarth::~sseEarth(void)
 {
 }
 
-char *sseEarth::GetTexturePath()
+const char *sseEarth::GetTexturePath()
 {
-	return "Data\\entities\\img\\earthColor4096.jpg";
+	return "Data/entities/img/earthColor4096.jpg";
 }

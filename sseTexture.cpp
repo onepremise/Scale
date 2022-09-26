@@ -34,7 +34,7 @@ FIBITMAP *sseTexture::OpenImage(const char* filename)
 	if(fif == FIF_UNKNOWN) 
 		fif = FreeImage_GetFIFFromFilename(filename);
 	if(fif == FIF_UNKNOWN)
-		return false;
+		return NULL;
 
 	if(FreeImage_FIFSupportsReading(fif))
 		dib = FreeImage_Load(fif, filename);

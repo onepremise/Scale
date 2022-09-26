@@ -12,6 +12,10 @@ protected:
 	virtual ~sseLog(void);
 
 public:
+	// void Info(char *str, ...);
+	// void Warn(char *str, ...);
+	// void Error(char *str, ...);
+
 	void Info(const char *str, ...);
 	void Warn(const char *str, ...);
 	void Error(const char *str, ...);

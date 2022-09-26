@@ -24,7 +24,7 @@
 #include "sseConcurrentContextGuard.hpp"
 #include "sseEventObjectHandler.hpp"
 #include "sseMathEngine.hpp"
-#include "GRFX\sseGrafxInterface.hpp"
+#include "GRFX/sseGrafxInterface.hpp"
 #include "sseTexture.h"
 #include "sseMaterial.h"
 #include "sseClock.hpp"

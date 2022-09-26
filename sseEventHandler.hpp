@@ -14,10 +14,11 @@
 #ifndef __SSEEVENTHANDLER__
 #define __SSEEVENTHANDLER__
 
+#include <SDL2/SDL.h>
+
 #include "sseInclude.hpp"
 #include "sseEventMappings.hpp"
 #include "sseEventObjectHandler.hpp"
-#include "SDL_events.h"
 
 class sseEngine;
 class sseDisplayManager;

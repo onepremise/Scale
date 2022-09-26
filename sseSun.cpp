@@ -55,7 +55,7 @@ void sseSun::SetRadius(double radius)
 
 void sseSun::Load(sseTexture *pTextureLoader)
 {
-	texture_id=pTextureLoader->LoadWrap("Data\\entities\\img\\sun.png", -1, GL_RGB);
+	texture_id=pTextureLoader->LoadWrap("Data/entities/img/sun.png", -1, GL_RGB);
 }
 
 void sseSun::PreProcess(sseGrafxInterface *pRenderer, sseTexture *pTextureLoader)

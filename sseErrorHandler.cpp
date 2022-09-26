@@ -13,7 +13,7 @@
 //=========================================================
 #include "sseErrorHandler.hpp"
 #include "sseLog.h"
-#include "SDL_opengl.h"
+#include <SDL2/SDL_opengl.h>
 
 sseErrorHandler::sseErrorHandler()
 {
@@ -63,6 +63,28 @@ void sseErrorHandler::_ThrowIfSDLWindowFail(SDL_Surface *pWindow)
 		log->Error("Failed to create window: %s", SDL_GetError());
 		cerr << "Failed to create window: " << SDL_GetError() << endl;
 		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_WINDOW);
+	}
+}
+
+void sseErrorHandler::_ThrowIfSDLContextFail(SDL_GLContext *pContext)
+{
+	if (pContext == NULL || pContext == (void *)DEBUG_NULL)
+	{
+		sseLog *log=sseLog::Instance();
+		log->Error("Failed to create context: %s", SDL_GetError());
+		cerr << "Failed to create context: " << SDL_GetError() << endl;
+		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_CONTEXT);
+	}
+}
+
+void sseErrorHandler::_ThrowIfSDLRendererFail(SDL_Renderer *pContext)
+{
+	if (pContext == NULL || pContext == (void *)DEBUG_NULL)
+	{
+		sseLog *log=sseLog::Instance();
+		log->Error("Failed to create renderer: %s", SDL_GetError());
+		cerr << "Failed to create renderer: " << SDL_GetError() << endl;
+		throw sseErrorHandler (sseErrorCodes::ERROR_SDL_RENDER);
 	}
 }
 
@@ -218,7 +240,7 @@ void sseErrorHandler::_ThrowIfOGLRendererError()
 	}
 }
 
-void sseErrorHandler::_ThrowIfUnitTestFail(bool bTest, char *szTestName)
+void sseErrorHandler::_ThrowIfUnitTestFail(bool bTest, const char *szTestName)
 {
 	if (bTest) {
 		cerr << "Failed to Run Unit Test: " << szTestName << "!" << endl;

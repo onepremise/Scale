@@ -8,5 +8,5 @@ public:
 	sseEarth(void);
 	virtual ~sseEarth(void);
 
-	virtual char *GetTexturePath();
+	virtual const char *GetTexturePath();
 };

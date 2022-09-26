@@ -15,7 +15,6 @@
 #define __SSEOBJECTCLASSES__
 
 #include "sseObject.hpp"
-#include "sseRCPlane.hpp"
 #include "sseTestObjects.hpp"
 
 #endif

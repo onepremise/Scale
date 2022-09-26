@@ -32,19 +32,19 @@ double sseSpace::GetSize()
 
 void sseSpace::Load(sseTexture *pTextureLoader)
 {
- 	tex_front_id=pTextureLoader->LoadWrap("Data\\entities\\img\\calmspace\\Front.tif", -1, GL_RGB);
-	tex_back_id=pTextureLoader->LoadWrap("Data\\entities\\img\\calmspace\\Back.tif", -1, GL_RGB);
-	tex_left_id=pTextureLoader->LoadWrap("Data\\entities\\img\\calmspace\\Left.tif", -1, GL_RGB);
-	tex_right_id=pTextureLoader->LoadWrap("Data\\entities\\img\\calmspace\\Right.tif", -1, GL_RGB);
-	tex_up_id=pTextureLoader->LoadWrap("Data\\entities\\img\\calmspace\\Up.tif", -1, GL_RGB);
-	tex_down_id=pTextureLoader->LoadWrap("Data\\entities\\img\\calmspace\\Down.tif", -1, GL_RGB);
+ 	tex_front_id=pTextureLoader->LoadWrap("Data/entities/img/calmspace/Front.tif", -1, GL_RGB);
+	tex_back_id=pTextureLoader->LoadWrap("Data/entities/img/calmspace/Back.tif", -1, GL_RGB);
+	tex_left_id=pTextureLoader->LoadWrap("Data/entities/img/calmspace/Left.tif", -1, GL_RGB);
+	tex_right_id=pTextureLoader->LoadWrap("Data/entities/img/calmspace/Right.tif", -1, GL_RGB);
+	tex_up_id=pTextureLoader->LoadWrap("Data/entities/img/calmspace/Up.tif", -1, GL_RGB);
+	tex_down_id=pTextureLoader->LoadWrap("Data/entities/img/calmspace/Down.tif", -1, GL_RGB);
 
-	//tex_front_id=textures->LoadWrap("Data\\entities\\img\\calmspace\\white.tif", -1, GL_RGB);
-	//tex_back_id=textures->LoadWrap("Data\\entities\\img\\calmspace\\white.tif", -1, GL_RGB);
-	//tex_left_id=textures->LoadWrap("Data\\entities\\img\\calmspace\\white.tif", -1, GL_RGB);
-	//tex_right_id=textures->LoadWrap("Data\\entities\\img\\calmspace\\white.tif", -1, GL_RGB);
-	//tex_up_id=textures->LoadWrap("Data\\entities\\img\\calmspace\\white.tif", -1, GL_RGB);
-	//tex_down_id=textures->LoadWrap("Data\\entities\\img\\calmspace\\white.tif", -1, GL_RGB);
+	//tex_front_id=textures->LoadWrap("Data/entities/img/calmspace/white.tif", -1, GL_RGB);
+	//tex_back_id=textures->LoadWrap("Data/entities/img/calmspace/white.tif", -1, GL_RGB);
+	//tex_left_id=textures->LoadWrap("Data/entities/img/calmspace/white.tif", -1, GL_RGB);
+	//tex_right_id=textures->LoadWrap("Data/entities/img/calmspace/white.tif", -1, GL_RGB);
+	//tex_up_id=textures->LoadWrap("Data/entities/img/calmspace/white.tif", -1, GL_RGB);
+	//tex_down_id=textures->LoadWrap("Data/entities/img/calmspace/white.tif", -1, GL_RGB);
 }
 
 void sseSpace::PreProcess(sseGrafxInterface *pRenderer, sseTexture *pTextureLoader) 

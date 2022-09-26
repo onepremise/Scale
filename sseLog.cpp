@@ -41,15 +41,15 @@ void sseLog::Info(const char *str, ...)
 {
 	char szInfo [4096]={0};
 
-	va_list arg_ptr=NULL;
+	va_list arg_ptr;
 
 	va_start(arg_ptr, str);
 
-	vsprintf_s(szInfo, str, arg_ptr);
+	vsprintf(szInfo, str, arg_ptr);
 
 	va_end(arg_ptr);
 
-	strcat_s(szInfo, "\n");
+	strcat(szInfo, "\n");
 
 	Write(szInfo);
 }
@@ -58,15 +58,15 @@ void sseLog::Warn(const char *str, ...)
 {
 	char szInfo [4096]={0};
 
-	va_list arg_ptr=NULL;
+	va_list arg_ptr;
 
 	va_start(arg_ptr, str);
 
-	vsprintf_s(szInfo, str, arg_ptr);
+	vsprintf(szInfo, str, arg_ptr);
 
 	va_end(arg_ptr);
 
-	strcat_s(szInfo, "\n");
+	strcat(szInfo, "\n");
 
 	Write(szInfo);
 }
@@ -75,15 +75,15 @@ void sseLog::Error(const char *str, ...)
 {
 	char szInfo [4096]={0};
 
-	va_list arg_ptr=NULL;
+	va_list arg_ptr;
 
 	va_start(arg_ptr, str);
 
-	vsprintf_s(szInfo, str, arg_ptr);
+	vsprintf(szInfo, str, arg_ptr);
 
 	va_end(arg_ptr);
 
-	strcat_s(szInfo, "\n");
+	strcat(szInfo, "\n");
 
 	Write(szInfo);
 }

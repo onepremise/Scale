@@ -753,7 +753,7 @@ public:
 		sseErrorHandler::_ThrowIfMatrixError((m_iMaxCols != m.GetCols()));
 	}
 
-	String toString(char *tag="") const
+	String toString(const char *tag="") const
 	{
 		std::ostringstream oss;
 

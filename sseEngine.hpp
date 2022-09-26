@@ -18,7 +18,7 @@
 #include "sseSceneLoader.hpp"
 #include "sseEventHandler.hpp"
 #include "sseDisplayManager.hpp"
-#include "GRFX\sseGrafxInterface.hpp"
+#include "GRFX/sseGrafxInterface.hpp"
 #include "sseClock.hpp"
 
 class sseEngine

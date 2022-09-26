@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\sseGrafxInterface.hpp"
+#include "../sseGrafxInterface.hpp"
 
 class sseOpenGLRenderer : public sseGrafxInterface
 {

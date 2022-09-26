@@ -27,7 +27,7 @@ protected:
 
 private:
 	String m_strDelimiter;
-	boolean m_bStart;
+	bool m_bStart;
 	float color[3];
 };
 

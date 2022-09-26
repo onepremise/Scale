@@ -36,10 +36,10 @@
 #include <GL/gl.h>  // Header File For The OpenGL32 Library
 #include <GL/glu.h> // Header File For The GLu32 Library
 #include <GL/glut.h>
+#include <SDL2/SDL.h>
 
 using namespace std;
 
-#include "SDL.h"                                           // The SDL Header File
 #include "sseErrorHandler.hpp"
 #include "sseLog.h"
 

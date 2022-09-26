@@ -8,5 +8,5 @@ public:
 	sseMoon(void);
 	virtual ~sseMoon(void);
 
-	virtual char *GetTexturePath();
+	virtual const char *GetTexturePath();
 };

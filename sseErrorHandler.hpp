@@ -21,8 +21,8 @@
 #include <list>
 #include <map>
 
-#include "SDL.h"
-#include "SDL_ttf.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 using namespace std;
 
@@ -47,6 +47,8 @@ public:
 		ERROR_SDL_INIT,
 		ERROR_SDL_QUERY,
 		ERROR_SDL_WINDOW,
+		ERROR_SDL_RENDER,
+		ERROR_SDL_CONTEXT,
 		ERROR_SDL_UPDATE,
 		ERROR_SDL_FULLSCREEN,
 		ERROR_SDL_CURSOR,
@@ -81,6 +83,7 @@ private:
 		m_errCodes[ERROR_SDL_INIT]="Failed initializing SDL Video!";
 		m_errCodes[ERROR_SDL_QUERY]="SDL Cannot query your video hardware!";
 		m_errCodes[ERROR_SDL_WINDOW]="SDL failed to create window!";
+		m_errCodes[ERROR_SDL_RENDER]="SDL failed to create Renderer!";
 		m_errCodes[ERROR_SDL_UPDATE]="Failed to swap the buffers!";
 		m_errCodes[ERROR_SDL_FULLSCREEN]="Failed to switch to Fullscreen mode!";
 		m_errCodes[ERROR_SDL_CURSOR]="Failed to switch to Fullscreen mode!";
@@ -120,6 +123,8 @@ public:
 	static void _ThrowIfSDLInitFailed(int iError);
 	static void _ThrowIfSDLQueryFailed(SDL_RendererInfo *pVidInfo);
 	static void _ThrowIfSDLWindowFail(SDL_Surface *pWindow);
+	static void _ThrowIfSDLContextFail(SDL_GLContext *pContext);
+	static void _ThrowIfSDLRendererFail(SDL_Renderer *pContext);
 	static void _ThrowIfSDLUpdateFail(int iError);
 	static void _ThrowIfSDLFullScreenSwitch(int iError);
 	static void _LogIfSDLCursorFail(int iSDLCALL);
@@ -136,7 +141,7 @@ public:
 	static void _ThrowIfAC3DInitError(void *ptr, char *szFile);
 	static void _ThrowIfAC3DDispError(int ac3dReturn, char *szFile);
 	static void _ThrowIfOGLRendererError();
-	static void _ThrowIfUnitTestFail(bool bTest, char *szTestName);
+	static void _ThrowIfUnitTestFail(bool bTest, const char *szTestName);
 
 private:
 	static sseErrorCodes m_errorCodes;

@@ -68,9 +68,12 @@ void sseEventHandler::HandleEvents()
 	        case SDL_WINDOWEVENT_LEAVE:
 	        	m_bHasFocus=false;
 	        	break;
+			case SDL_WINDOWEVENT_RESIZED:
+				m_pDisplay->ReSizeOpenGLWindow(sdlEvent.window.data1, sdlEvent.window.data2);
+				break;
 			}
 		}
-		else if( sdlEvent.type == SDL_WINDOWEVENT_RESIZED )
+		else if((sdlEvent.type == SDL_WINDOWEVENT_RESIZED) || (sdlEvent.type == SDL_WINDOWEVENT_SIZE_CHANGED))
         {	
 			m_pDisplay->ReSizeOpenGLWindow(sdlEvent.window.data1, sdlEvent.window.data2);
 		}
@@ -140,9 +143,7 @@ void sseEventHandler::RemoveObjectFromQueue(sseEventObjectHandler *pOEH)
 
 void sseEventHandler::HandleKeyPressEvents(SDL_Scancode *pKeyCode)
 {
-	//const Uint8 *keys = SDL_GetKeyboardState(NULL);
-
-    switch((int)pKeyCode)
+    switch(*pKeyCode)
     {
         case SDL_SCANCODE_F1:
             printHelp();
@@ -245,7 +246,7 @@ void sseEventHandler::cycleHandling()
 
 void sseEventHandler::HandleKeyReleaseEvents(SDL_Scancode *pKeyCode)
 {
-	switch((int)pKeyCode)
+	switch(*pKeyCode)
     {
         case SDL_SCANCODE_UP:
 		case SDL_SCANCODE_W:
