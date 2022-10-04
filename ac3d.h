@@ -1,3 +1,41 @@
+//========================================================
+//              Scaled Simulator Engine
+//
+// Author:       www.ac3d.org
+//
+// Description:  AC3D Importer/Exporter
+//
+// Notes:
+//
+// AC3DVIEW version 1.13 
+//
+// This is some sample code to load and view an AC3D file.  AC3D is 3D modeling software and 
+// AC3D models (.ac files) contain the data for three dimensional objects.  The .ac file format
+// is a simple ASCII text format and is explained at the main website - www.ac3d.org. 
+//
+// This code would be a good basis for any application that loads and displays AC3D files e.g.
+// a game.
+//
+//
+// SOME THINGS NOT HANDLED FROM THE .ac FILE
+//
+// 1) This loader does not use the rotation matrices from the AC3D
+//    file (if you create a file using AC3D, it will not have any).
+//
+// 2) Polygons are not triangluated.  If there are polygons with > 4 vertices
+//    and they are concave, you may not get what you see in AC3D.  (to fix this
+//    just select the surface/s in AC3D and Surface->triangulate).
+//
+// 3) Lights from the .ac file are not drawn (there is a single light in the scene).
+//
+// 4) The object crease angle attribute is ignored.
+//
+// All the files here are free of copyright so you can use them as you please.  If you do use them
+// them please give credit to AC3D.
+//
+// www.ac3d.org
+//
+//=========================================================
 #ifndef __ac3d__
 #define __ac3d__
 
@@ -106,6 +144,7 @@ typedef struct ACImage_t
 
 #ifndef TRUE
 #define FALSE (0)
+
 #define TRUE (!FALSE)
 #endif
 

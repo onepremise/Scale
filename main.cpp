@@ -1,41 +1,58 @@
 //========================================================
 //              Scaled Simulator Engine
 //
-//  Author:       Jason Huntley
+// Author:       Jason Huntley
 //
-//  Description:  Entry Point
+// Description:  Entry Point
+// Notes:
 //
-//  Notes:
-//  
-//     Date         Description         Initials  Location
-//---------------------------------------------------------
-//  12/11/2004    Initial Coding          JAH
+//    Y+
+//    |
+//    |__ X+
+//   /
+//  Z+ 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 //=========================================================
-#include "sseInclude.hpp"
 #include "sseEngine.hpp"
+#include "sseInclude.hpp"
 #include "sseMath.hpp"
 
 sseErrorCodes sseErrorHandler::m_errorCodes;
 
 int main(int argc, char *argv[])
 {
-	sseEngine *engine;
+    sseEngine *engine;
 
-	try {
-		engine=sseEngine::Instance();
+    try
+    {
+        engine = sseEngine::Instance();
 
-		engine->StartSimulation();
-	} catch (sseErrorHandler error) {
-		SDL_Quit();
+        engine->StartSimulation();
+    }
+    catch (sseErrorHandler error)
+    {
+        SDL_Quit();
 
-		sseLog *log=sseLog::Instance();
+        sseLog *log = sseLog::Instance();
 
-		log->Error(error.getErrMessage());
+        log->Error(error.getErrMessage());
 
-		cerr << error.getErrMessage()  << endl;
-	}
+        cerr << error.getErrMessage() << endl;
+    }
 
-	delete engine;
+    delete engine;
 
-	return 0;
+    return 0;
 }
